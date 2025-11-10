@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-lg border-0 pt-5" style="border-radius: 15px;">
+            <div class="card-header bg-warning text-dark text-center py-3" style="border-radius: 15px 15px 0 0;">
+                <h3 class="mb-0"><i class="fas fa-edit me-2"></i> Actualizar: {{ producto.nombre }}</h3>
+            </div>
+            <div class="card-body p-4">
+                {% if error_message %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error_message }}
+                </div>
+                {% endif %}
+
+                <form method="POST" action="{% url 'realizar_actualizacion_producto' producto.id %}">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label text-secondary">Nombre:</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" value="{{ producto.nombre }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="categoria" class="form-label text-secondary">Categoría:</label>
+                        <select class="form-select" id="categoria" name="categoria" required>
+                            <option value="">Selecciona una categoría</option>
+                            {% for cat in ["Pociones", "Artefactos", "Hechizos", "Ingredientes", "Otros"] %}
+                                <option value="{{ cat }}" {% if producto.categoria == cat %}selected{% endif %}>{{ cat }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="precio" class="form-label text-secondary">Precio (USD):</label>
+                            <input type="number" step="0.01" class="form-control" id="precio" name="precio" value="{{ producto.precio }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="stock" class="form-label text-secondary">Stock:</label>
+                            <input type="number" class="form-control" id="stock" name="stock" value="{{ producto.stock }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="proveedor" class="form-label text-secondary">Proveedor:</label>
+                        <input type="text" class="form-control" id="proveedor" name="proveedor" value="{{ producto.proveedor|default:"" }}">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="descripcion" class="form-label text-secondary">Descripción:</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3">{{ producto.descripcion|default:"" }}</textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-warning btn-lg w-100 text-dark">
+                        <i class="fas fa-sync-alt me-2"></i> Actualizar Producto
+                    </button>
+                    <a href="{% url 'ver_producto' %}" class="btn btn-secondary mt-3 w-100">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
